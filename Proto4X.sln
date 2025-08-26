@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proto4X", "Proto4X\Proto4X.csproj", "{CC81A412-4BBD-470E-A893-3B7D4EAF950D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLibrary", "MonoGameLibrary\MonoGameLibrary.csproj", "{6F1117D6-2573-447D-966C-57A351E185D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC81A412-4BBD-470E-A893-3B7D4EAF950D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC81A412-4BBD-470E-A893-3B7D4EAF950D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC81A412-4BBD-470E-A893-3B7D4EAF950D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC81A412-4BBD-470E-A893-3B7D4EAF950D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1117D6-2573-447D-966C-57A351E185D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1117D6-2573-447D-966C-57A351E185D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1117D6-2573-447D-966C-57A351E185D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1117D6-2573-447D-966C-57A351E185D1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A876C5ED-833D-44F5-9E0B-0DAFD1B61C9B}
+	EndGlobalSection
+EndGlobal
