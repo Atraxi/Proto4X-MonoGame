@@ -2,12 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
+using Proto4x.World;
 
 namespace Proto4X
 {
     public class Proto4X : Core
     {
-        private Texture2D _logo;
+        private GameLayer _world;
 
         public Proto4X() : base("Proto4X", 1920, 1080, false)
         {
@@ -18,11 +19,13 @@ namespace Proto4X
         {
             base.Initialize();
 
+            _world = new GameLayer(0, 0, 1000, 1000);
         }
 
         protected override void LoadContent()
         {
-            _logo = Content.Load<Texture2D>("images/logo");
+            //var thing = Texture2D.FromFile(GraphicsDevice, "");
+            //_logo = Content.Load<Texture2D>("images/logo");
         }
 
         protected override void Update(GameTime gameTime)
@@ -39,13 +42,7 @@ namespace Proto4X
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            SpriteBatch.Begin();
-
-            // Draw the logo texture
-            SpriteBatch.Draw(_logo, Vector2.Zero, Color.White);
-
-            // Always end the sprite batch when finished.
-            SpriteBatch.End();
+            _world.Draw(SpriteBatch, new Rectangle(0, 0, 1000, 1000));//TODO UI viewport
 
             base.Draw(gameTime);
         }

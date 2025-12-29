@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Proto4x.Components;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Proto4X.Entities
 {
     public class Entity
     {
+        protected readonly IEnumerable<ComponentBase> Components = [];
+
     }
 }

@@ -1,27 +1,29 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Proto4x.Components;
+using Proto4X.Components;
 using Proto4X.Entities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Proto4x.World
 {
-    public class GameLayer
+    public class GameLayer(int xPos, int yPos, int width, int height)
     {
-        public readonly Dictionary<int, Entity> Entities;
-        public readonly Rectangle Bounds;
+        public readonly Dictionary<int, Entity> Entities = [];
+        public readonly Rectangle Bounds = new(xPos, yPos, width, height);
+        private readonly ComponentStore<Drawable> Drawables = new();
+        private readonly ComponentStore<Position> EntityPositions = new();
 
-        public GameLayer(int xPos, int yPos, int width, int height)
+        public void Draw(SpriteBatch spriteBatch, Rectangle viewport)
         {
-            Entities = new();
-            Bounds = new(xPos, yPos, width, height);
-        }
+            spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(Bounds.X, Bounds.Y, 0/*I think? 2d game not 3d. Confirm*/));
 
-        public void draw(Graphics graphics)
-        {
-            graphics.transform(Matrix.Translate(Bounds.X, Bounds.Y));
+            foreach(var drawable in Drawables.GetAll().Values.Where(drawable => drawable.GetBounds().Intersects(viewport))) {
+                drawable.Draw(spriteBatch, EntityPositions.Get(drawable.Id));
+            }
 
-            Drawables.forEach(drawable => {
-                drawable.value.draw(graphics, drawable.key);
-            });
+            spriteBatch.End();
 	    }
     }
 }

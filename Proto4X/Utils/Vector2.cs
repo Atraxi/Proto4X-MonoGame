@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Proto4x.Components;
-using System;
 
 namespace Proto4x.Utils
 {

@@ -1,31 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
-using Proto4x.Utils;
 using Proto4x.World;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Proto4x.Components
 {
-    internal struct Position
+    public record Position : ComponentBase
     {
-        public Vector2 _Position;
+        public Vector2 Location { get; protected set; }
 
-        public Position(Vector2 position) 
-        { 
-            _Position = position; 
+        public float Rotation { get; protected set; }
+
+        public Position(int id, Vector2 location, float rotation = 0) : base(id)
+        {
+            Location = location;
+            Rotation = rotation;
         }
     }
 
-    internal struct Movable
+    public record Movable(int id, Vector2 Location, float Rotation, GameLayer GameLayer) : Position(id, Location, Rotation)
     {
-        public Vector2 Position;
-        public Vector2 Velocity = new Vector2();
-        public Vector2 Acceleration = new Vector2();
-
-        public float Rotation = 0;
+        public Vector2 Velocity = new();
+        public Vector2 Acceleration = new();
+        
         public float AngularVelocity = 0;
         public float AngularAcceleration = 0;
 
@@ -37,15 +33,7 @@ namespace Proto4x.Components
         public float MaxAngularVelocity = (float)Math.PI / 4;
         public float MaxAngularAcceleration = (float)Math.PI / 8;
 
-        public GameLayer GameLayer;
-
-        public Movable(Vector2 position, GameLayer gameLayer)
-        {
-            Position = position;
-            GameLayer = gameLayer;
-        }
-
-        void update(float deltaTime)
+        void Update(float deltaTime)
         {
             Velocity += Acceleration * deltaTime;
 		    if(Velocity.Length() > MaxSpeed) {
@@ -53,7 +41,7 @@ namespace Proto4x.Components
                 Velocity *= MaxSpeed;
             }
             Velocity *= 1 - Friction;
-            Position += Velocity * deltaTime;
+            Location += Velocity * deltaTime;
 
             AngularVelocity += AngularAcceleration * deltaTime;
             if (AngularVelocity > MaxAngularVelocity)
@@ -71,7 +59,7 @@ namespace Proto4x.Components
                 Rotation += (float)(Math.PI * 2);
             }
 
-            this.boundsCheck();
+            this.BoundsCheck();
           }
 
         void AccelerateRelativeToRotation(Vector2 thrust)
@@ -89,41 +77,41 @@ namespace Proto4x.Components
             }
         }
 
-        void rotate(float rotation)
+        void Rotate(float rotation)
         {
             AngularAcceleration += rotation;
         }
 
-        Vector2 getPositionAtTimeT(int time)
+        Vector2 GetPositionAtTimeT(int time)
         {
-            var xt = Position.X + Velocity.X * time + 0.5 * Acceleration.X * Math.Pow(time, 2);
-            var yt = Position.Y + Velocity.Y * time + 0.5 * Acceleration.Y * Math.Pow(time, 2);
+            var xt = Location.X + Velocity.X * time + 0.5 * Acceleration.X * Math.Pow(time, 2);
+            var yt = Location.Y + Velocity.Y * time + 0.5 * Acceleration.Y * Math.Pow(time, 2);
             return new ((float)xt, (float)yt);
         }
 
-        private void boundsCheck()
+        private void BoundsCheck()
         {
-            if (Position.X > GameLayer.Bounds.Width)
+            if (Location.X > GameLayer.Bounds.Width)
             {
-                Position.X = GameLayer.Bounds.Width;
+                Location = Location with { X = GameLayer.Bounds.Width };
                 Velocity.X = 0;
             }
-            else if (Position.X < 0)
+            else if (Location.X < 0)
             {
-                Position.X = 0;
+                Location = Location with { X = 0 };
                 Velocity.X = 0;
             }
 
-            if (Position.Y > GameLayer.Bounds.Height)
+            if (Location.Y > GameLayer.Bounds.Height)
             {
-                Position.Y = GameLayer.Bounds.Height;
+                Location = Location with { Y = GameLayer.Bounds.Height };
 
                 Velocity.Y = 0;
 
             }
-            else if (Position.Y < 0)
+            else if (Location.Y < 0)
             {
-                Position.Y = 0;
+                Location = Location with { Y = 0 };
                 Velocity.Y = 0;
             }
         }
