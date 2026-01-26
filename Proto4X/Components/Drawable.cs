@@ -4,15 +4,14 @@ using Proto4x.Components;
 
 namespace Proto4X.Components
 {
-    internal record Drawable(int Id, Texture2D Texture) : ComponentBase(Id)
+    public struct Drawable(Rectangle? textureRegion)
     {
-        public Rectangle GetBounds()
-        {
-            return Texture.Bounds;
-        }
-        public void Draw(SpriteBatch spriteBatch, Position position)
-        {
-            spriteBatch.Draw(Texture, position.Location, null, Color.White, position.Rotation, Vector2.Zero, 1, SpriteEffects.None, 1);
-        }
+        public Rectangle? TextureRegion { get; set; } = textureRegion;
+    }
+
+    public interface IDrawableProvider : IComponentProvider
+    {
+        public Drawable[] Drawables { get; }
+        public Texture2D Texture { get; }
     }
 }

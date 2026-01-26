@@ -3,12 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using Proto4x.World;
+using Proto4X.Systems;
 
 namespace Proto4X
 {
     public class Proto4X : Core
     {
         private GameLayer _world;
+        private SystemScheduler _systemScheduler;
 
         public Proto4X() : base("Proto4X", 1920, 1080, false)
         {
@@ -20,6 +22,8 @@ namespace Proto4X
             base.Initialize();
 
             _world = new GameLayer(0, 0, 1000, 1000);
+            _systemScheduler = new SystemScheduler();
+            _systemScheduler.Add(_world, new Renderer());
         }
 
         protected override void LoadContent()
@@ -33,7 +37,7 @@ namespace Proto4X
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            _systemScheduler.Update(_world, gameTime);
 
             base.Update(gameTime);
         }
@@ -42,7 +46,7 @@ namespace Proto4X
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _world.Draw(SpriteBatch, new Rectangle(0, 0, 1000, 1000));//TODO UI viewport
+            _systemScheduler.Draw(SpriteBatch, /*TODO UI viewport*/new Rectangle(0, 0, 1000, 1000), _world);
 
             base.Draw(gameTime);
         }
