@@ -1,4 +1,4 @@
-﻿namespace Proto4X.Components
+﻿namespace MonoGameLibrary.Components
 {
     public interface IComponentProvider { }
 }

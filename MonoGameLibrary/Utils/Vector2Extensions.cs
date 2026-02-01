@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Proto4x.Utils
+namespace MonoGameLibrary.Utils
 {
     public static class Vector2Extensions
     {

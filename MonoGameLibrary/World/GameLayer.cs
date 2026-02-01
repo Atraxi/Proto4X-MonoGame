@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Proto4x.Components;
-using Proto4X.Archetypes;
-using Proto4X.Components;
-using Proto4X.Systems;
+using MonoGameLibrary.Archetypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Proto4x.World
+namespace MonoGameLibrary.World
 {
     public class GameLayer(int xPos, int yPos, int width, int height)
     {

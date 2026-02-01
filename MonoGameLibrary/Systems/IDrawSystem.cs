@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Proto4X.Archetypes;
-using System;
+using MonoGameLibrary.Archetypes;
 using System.Collections.Generic;
 
-namespace Proto4X.Systems
+namespace MonoGameLibrary.Systems
 {
     public interface IDrawSystem
     {

@@ -2,7 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
-using Proto4x.World;
+using MonoGameLibrary.Systems;
+using MonoGameLibrary.World;
 using Proto4X.Systems;
 
 namespace Proto4X
@@ -24,6 +25,8 @@ namespace Proto4X
             _world = new GameLayer(0, 0, 1000, 1000);
             _systemScheduler = new SystemScheduler();
             _systemScheduler.Add(_world, new Renderer());
+            _systemScheduler.Add(_world, new TimerSystem());
+            _systemScheduler.Add(_world, new MovementSystem());
         }
 
         protected override void LoadContent()
@@ -35,7 +38,9 @@ namespace Proto4X
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            }
 
             _systemScheduler.Update(_world, gameTime);
 

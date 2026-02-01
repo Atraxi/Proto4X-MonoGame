@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Proto4X.Archetypes
+namespace MonoGameLibrary.Archetypes
 {
     public abstract class ArchetypeBase<TPayload>(int initialCapacity) : ArchetypeBase(initialCapacity)
     {

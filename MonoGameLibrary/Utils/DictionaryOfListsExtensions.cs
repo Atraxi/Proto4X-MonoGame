@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Proto4X.Utils
+namespace MonoGameLibrary.Utils
 {
     public static class DictionaryOfListsExtensions
     {

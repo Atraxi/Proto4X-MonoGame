@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Proto4X.Archetypes;
+using MonoGameLibrary.Archetypes;
 using System.Collections.Generic;
 
-namespace Proto4X.Systems
+namespace MonoGameLibrary.Systems
 {
     public interface IUpdateSystem
     {

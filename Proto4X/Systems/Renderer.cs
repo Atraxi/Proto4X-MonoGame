@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Archetypes;
+using MonoGameLibrary.Systems;
 using Proto4x.Components;
-using Proto4X.Archetypes;
 using Proto4X.Components;
 using System;
 using System.Collections.Generic;
