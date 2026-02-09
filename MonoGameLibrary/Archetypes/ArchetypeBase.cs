@@ -4,7 +4,7 @@ namespace MonoGameLibrary.Archetypes
 {
     public abstract class ArchetypeBase<TPayload>(int initialCapacity) : ArchetypeBase(initialCapacity)
     {
-        protected void AddEntity(int entityId, TPayload payload)
+        public void AddEntity(int entityId, TPayload payload)
         {
             int index = count++;
 
@@ -18,9 +18,9 @@ namespace MonoGameLibrary.Archetypes
 
             OnAddEntity(index, payload);
         }
-        public abstract void OnAddEntity(int entityId, TPayload payload);
+        protected abstract void OnAddEntity(int entityId, TPayload payload);
 
-        protected void RemoveEntityInternal(int entityId)
+        public void RemoveEntity(int entityId)
         {
             int index = EntityToDense[entityId];
             int last = --count;
@@ -34,7 +34,7 @@ namespace MonoGameLibrary.Archetypes
 
             OnRemoveEntity(index);
         }
-        public abstract void OnRemoveEntity(int entityId);
+        protected abstract void OnRemoveEntity(int entityId);
     }
 
     public abstract class ArchetypeBase(int initialCapacity)

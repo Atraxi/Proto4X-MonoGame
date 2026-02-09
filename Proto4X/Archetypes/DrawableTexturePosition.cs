@@ -7,7 +7,8 @@ using System;
 
 namespace Proto4X.Archetypes
 {
-    public class DrawableTexturePosition(int initialCapacity, Texture2D texture) : ArchetypeBase<(Vector2 position,
+    public class DrawableTexturePosition(int initialCapacity) : ArchetypeBase<(
+            Vector2 position,
             float radiansRotation, 
             Texture2D texture, 
             Rectangle? textureRegion)>(initialCapacity),
@@ -20,7 +21,7 @@ namespace Proto4X.Archetypes
         public Drawable[] Drawables => drawables;
         private Drawable[] drawables = new Drawable[initialCapacity];
 
-        public Texture2D Texture { get; set; } = texture;
+        public Texture2D Texture { get; set; }
 
         protected override void Grow(int newSize)
         {
@@ -28,13 +29,13 @@ namespace Proto4X.Archetypes
             Array.Resize(ref drawables, newSize);
         }
 
-        public override void OnAddEntity(int index, (Vector2 position, float radiansRotation, Texture2D texture, Rectangle? textureRegion) payload) {
+        protected override void OnAddEntity(int index, (Vector2 position, float radiansRotation, Texture2D texture, Rectangle? textureRegion) payload) {
             Positions[index] = new(payload.position, payload.radiansRotation);
             Drawables[index] = new(payload.textureRegion);
             Texture = payload.texture;
         }
 
-        public override void OnRemoveEntity(int index)
+        protected override void OnRemoveEntity(int index)
         {
             int last = Count;
 

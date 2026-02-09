@@ -2,7 +2,6 @@
 
 namespace Proto4X.Components
 {
-    [Component]
     public struct Timer(float duration, bool shouldRepeat)
     {
         public float Duration { get; set; } = duration;

@@ -38,6 +38,7 @@ namespace MonoGameLibrary.Systems
 
         public void Draw(SpriteBatch spriteBatch, Rectangle viewport, GameLayer gameLayer)
         {
+            spriteBatch.Begin();
             foreach (var system in _drawSystems[gameLayer])
             {
                 var systemAsBase = (SystemBase)system;//Guaranteed because we use add<T>(...) where T : SystemBase, would use a union type if they were available
@@ -46,6 +47,7 @@ namespace MonoGameLibrary.Systems
                 var archetypes = gameLayer.QueryRelevantArchetypes(systemAsBase.RequiredComponentProviders);
                 system.Draw(spriteBatch, viewport, archetypes);
             }
+            spriteBatch.End();
         }
     }
 }

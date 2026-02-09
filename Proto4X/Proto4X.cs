@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Systems;
 using MonoGameLibrary.World;
+using Proto4X.Archetypes;
 using Proto4X.Systems;
 
 namespace Proto4X
@@ -12,6 +13,7 @@ namespace Proto4X
     {
         private GameLayer _world;
         private SystemScheduler _systemScheduler;
+        private SpriteLibrary _spriteLibrary;
 
         public Proto4X() : base("Proto4X", 1920, 1080, false)
         {
@@ -20,19 +22,27 @@ namespace Proto4X
 
         protected override void Initialize()
         {
-            base.Initialize();
-
             _world = new GameLayer(0, 0, 1000, 1000);
+
             _systemScheduler = new SystemScheduler();
             _systemScheduler.Add(_world, new Renderer());
             _systemScheduler.Add(_world, new TimerSystem());
             _systemScheduler.Add(_world, new MovementSystem());
+
+            _spriteLibrary = new SpriteLibrary();
+
+            base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            //var thing = Texture2D.FromFile(GraphicsDevice, "");
-            //_logo = Content.Load<Texture2D>("images/logo");
+            var scout = Content.Load<Texture2D>("Ships/ship_scout_32x32");
+            //Todo: actually use sprite library
+            //_spriteLibrary.Add();
+
+            var drawableArchetype = new DrawableTexturePosition(500);
+            drawableArchetype.AddEntity(0, (new Vector2(50, 60), 90, scout, null));
+            _world.Archetypes.Add(scout, [drawableArchetype]);
         }
 
         protected override void Update(GameTime gameTime)

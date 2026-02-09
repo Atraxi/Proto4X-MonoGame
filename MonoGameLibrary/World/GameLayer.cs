@@ -9,7 +9,7 @@ namespace MonoGameLibrary.World
 {
     public class GameLayer(int xPos, int yPos, int width, int height)
     {
-        public readonly Dictionary<Texture2D, List<ArchetypeBase>> Archetypes = new();
+        public readonly Dictionary<Texture2D, List<ArchetypeBase>> Archetypes = [];
         public readonly Rectangle Bounds = new(xPos, yPos, width, height);
 
         public List<ArchetypeBase> QueryRelevantArchetypes(IEnumerable<Type> componentProviderTypes)

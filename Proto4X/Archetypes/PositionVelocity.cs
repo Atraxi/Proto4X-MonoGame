@@ -10,13 +10,13 @@ class PositionMotion(int initialCapacity) : ArchetypeBase<(Vector2 position, flo
     public Motion[] MotionValues => motionValues;
     private Motion[] motionValues = new Motion[initialCapacity];
 
-    public override void OnAddEntity(int index, (Vector2 position, float radiansRotation, Vector2 velocity) payload)
+    protected override void OnAddEntity(int index, (Vector2 position, float radiansRotation, Vector2 velocity) payload)
     {
         Positions[index] = new(payload.position, payload.radiansRotation);
         MotionValues[index] = new(payload.velocity);
     }
 
-    public override void OnRemoveEntity(int index)
+    protected override void OnRemoveEntity(int index)
     {
         int last = Count;
 
