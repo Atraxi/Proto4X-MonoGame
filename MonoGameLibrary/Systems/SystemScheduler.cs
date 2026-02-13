@@ -34,6 +34,14 @@ namespace MonoGameLibrary.Systems
                 var archetypes = gameLayer.QueryRelevantArchetypes(systemAsBase.RequiredComponentProviders);
                 system.Update(gameTime, archetypes);
             }
+
+            foreach (var archetypesByTexture in gameLayer.Archetypes)
+            {
+                foreach (var archetype in archetypesByTexture.Value)
+                {
+                    archetype.ProcessDeferredUpdates();
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Rectangle viewport, GameLayer gameLayer)

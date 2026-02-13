@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MonoGameLibrary.Archetypes
 {
     public abstract class ArchetypeBase<TPayload>(int initialCapacity) : ArchetypeBase(initialCapacity)
     {
+        private List<int> DeferredEntityRemovalsByIndex = [];
+        private List<(int entityId, TPayload payload)> DeferredAdditions = [];
+
         public void AddEntity(int entityId, TPayload payload)
         {
             int index = count++;
@@ -35,6 +39,35 @@ namespace MonoGameLibrary.Archetypes
             OnRemoveEntity(index);
         }
         protected abstract void OnRemoveEntity(int entityId);
+
+        public void QueueEntityForAddition(int entityId, TPayload entityData)
+        {
+            DeferredAdditions.Add((entityId, entityData));
+        }
+
+        public void QueueEntityForRemovalById(int entityId)
+        {
+            DeferredEntityRemovalsByIndex.Add(EntityToDense[entityId]);
+        }
+
+        public void QueueEntityForRemovalByIndex(int entityIndex)
+        {
+            DeferredEntityRemovalsByIndex.Add(entityIndex);
+        }
+
+        internal override void ProcessDeferredUpdates()
+        {
+            foreach ((int entityId, TPayload payload) in DeferredAdditions)
+            {
+                AddEntity(entityId, payload);
+            }
+
+            DeferredEntityRemovalsByIndex.Sort((int A, int B) => B - A);
+            foreach (var  entityId in DeferredEntityRemovalsByIndex)
+            {
+                RemoveEntity(entityId);
+            }
+        }
     }
 
     public abstract class ArchetypeBase(int initialCapacity)
@@ -60,5 +93,7 @@ namespace MonoGameLibrary.Archetypes
         }
 
         protected abstract void Grow(int newSize);
+
+        internal abstract void ProcessDeferredUpdates();
     }
 }

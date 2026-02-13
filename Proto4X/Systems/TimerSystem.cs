@@ -20,7 +20,7 @@ namespace Proto4X.Systems
             {
                 var timers = ((ITimerProvider)archetype).Timers;
 
-                for (int i = 0; i < timers.Length; i++)
+                for (int i = 0; i < archetype.Count; i++)
                 {
                     if (timers[i].HasJustElapsed)
                     {

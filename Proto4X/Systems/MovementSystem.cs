@@ -82,7 +82,7 @@ namespace Proto4X.Systems
                 var motionProvider = (IMotionProvider)archetype;
                 var positionProvider = (IPositionProvider)archetype;
 
-                for (int i = 0; i < positionProvider.Positions.Length; i++)
+                for (int i = 0; i < archetype.Count; i++)
                 {
                     var position = positionProvider.Positions[i];
                     var velocity = motionProvider.MotionValues[i].Velocity;

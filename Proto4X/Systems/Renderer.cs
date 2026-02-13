@@ -24,7 +24,7 @@ namespace Proto4X.Systems
                 var drawables = drawableProvider.Drawables;
                 var entityPositions = (archetype as IPositionProvider).Positions;
                 
-                for (var index = 0; index < drawables.Length; index++)
+                for (var index = 0; index < archetype.Count; index++)
                 {
                     ref var drawable = ref drawables[index];
                     ref var position = ref entityPositions[index];

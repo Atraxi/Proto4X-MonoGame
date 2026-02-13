@@ -20,19 +20,9 @@ namespace MonoGameLibrary
         protected static GraphicsDeviceManager Graphics { get; private set; }
 
         /// <summary>
-        /// Gets the graphics device used to create graphical resources and perform primitive rendering.
-        /// </summary>
-        protected static new GraphicsDevice GraphicsDevice { get; private set; }
-
-        /// <summary>
         /// Gets the sprite batch used for all 2D rendering.
         /// </summary>
         protected SpriteBatch SpriteBatch { get; private set; }
-
-        /// <summary>
-        /// Gets the content manager used to load global assets.
-        /// </summary>
-        protected static new ContentManager Content { get; private set; }
 
         /// <summary>
         /// Creates a new Core instance.
@@ -53,23 +43,20 @@ namespace MonoGameLibrary
             s_instance = this;
 
             // Create a new graphics device manager.
-            Graphics = new GraphicsDeviceManager(this);
-
-            // Set the graphics defaults.
-            Graphics.PreferredBackBufferWidth = width;
-            Graphics.PreferredBackBufferHeight = height;
-            Graphics.IsFullScreen = fullScreen;
+            Graphics = new GraphicsDeviceManager(this)
+            {
+                // Set the graphics defaults.
+                PreferredBackBufferWidth = width,
+                PreferredBackBufferHeight = height,
+                IsFullScreen = fullScreen,
+            };
 
             // Apply the graphic presentation changes.
             Graphics.ApplyChanges();
 
             // Set the window title.
             Window.Title = title;
-
-            // Set the core's content manager to a reference of the base Game's
-            // content manager.
-            Content = base.Content;
-
+            
             // Set the root directory for content.
             Content.RootDirectory = "Content";
 
@@ -79,10 +66,6 @@ namespace MonoGameLibrary
 
         protected override void Initialize()
         {
-            // Set the core's graphics device to a reference of the base Game's
-            // graphics device.
-            GraphicsDevice = base.GraphicsDevice;
-
             // Create the sprite batch instance.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 

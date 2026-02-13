@@ -41,7 +41,7 @@ namespace Proto4X
             //_spriteLibrary.Add();
 
             var drawableArchetype = new DrawableTexturePosition(500);
-            drawableArchetype.AddEntity(0, (new Vector2(50, 60), 90, scout, null));
+            drawableArchetype.AddEntity(0, (new Vector2(50, 60), float.DegreesToRadians(90), scout, null));
             _world.Archetypes.Add(scout, [drawableArchetype]);
         }
 
