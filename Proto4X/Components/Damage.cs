@@ -6,8 +6,4 @@ namespace Proto4X.Components
     {
         public int Value { get; private set; } = value;
     }
-    public interface IDamageProvider : IComponentProvider
-    {
-        public Damage[] DamageValues { get; }
-    }
 }

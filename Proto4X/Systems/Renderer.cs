@@ -1,40 +1,39 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary;
 using MonoGameLibrary.Archetypes;
+using MonoGameLibrary.Components;
 using MonoGameLibrary.Systems;
-using Proto4x.Components;
 using Proto4X.Components;
-using System;
 using System.Collections.Generic;
 
 namespace Proto4X.Systems
 {
     public class Renderer : SystemBase, IDrawSystem
     {
-        public override IEnumerable<Type> RequiredComponentProviders => [
-            typeof(IPositionProvider),
-            typeof(IDrawableProvider),
-            ];
+        public override ComponentTypeMask RequiredComponentProviders => ComponentTypeMask.FromTypes(
+            typeof(Position),
+            typeof(Drawable)
+            );
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle viewport, List<ArchetypeBase> archetypes)
+        public void Draw(SpriteBatch spriteBatch, Rectangle viewport, List<ArchetypeChunk> archetypeChunks)
         {
-            foreach (var archetype in archetypes)
+            foreach(var archetypeChunk in archetypeChunks)
             {
-                var drawableProvider = archetype as IDrawableProvider;
-                var drawables = drawableProvider.Drawables;
-                var entityPositions = (archetype as IPositionProvider).Positions;
-                
-                for (var index = 0; index < archetype.Count; index++)
+                var drawables = archetypeChunk.Get<Drawable>();
+                var entityPositions = archetypeChunk.Get<Position>();
+
+                for (var entityIndex = 0; entityIndex < archetypeChunk.EntityCount; entityIndex++)
                 {
-                    ref var drawable = ref drawables[index];
-                    ref var position = ref entityPositions[index];
+                    ref var drawable = ref drawables[entityIndex];
+                    ref var position = ref entityPositions[entityIndex];
 
                     if(!viewport.Contains(position.Location))
                     {
                         continue;
                     }
 
-                    spriteBatch.Draw(drawableProvider.Texture, position.Location, drawable.TextureRegion, Color.White, position.Rotation, Vector2.Zero, 1, SpriteEffects.None, 1);
+                    spriteBatch.Draw(SpriteLibrary.GetTexture(drawable.SpriteId), position.Location, drawable.TextureRegion, Color.White, position.Rotation, Vector2.Zero, 1, SpriteEffects.None, 1);
                 }
             }
         }

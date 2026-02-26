@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MonoGameLibrary.Components;
 
 namespace MonoGameLibrary.Systems
 {
     public abstract class SystemBase
     {
-        public abstract IEnumerable<Type> RequiredComponentProviders { get; }
+        public abstract ComponentTypeMask RequiredComponentProviders { get; }
     }
 }

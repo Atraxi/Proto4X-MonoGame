@@ -7,6 +7,6 @@ namespace MonoGameLibrary.Systems
 {
     public interface IDrawSystem
     {
-        void Draw(SpriteBatch spriteBatch, Rectangle viewport, List<ArchetypeBase> archetypes);
+        void Draw(SpriteBatch spriteBatch, Rectangle viewport, List<ArchetypeChunk> archetypeChunks);
     }
 }

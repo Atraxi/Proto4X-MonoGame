@@ -6,8 +6,4 @@ namespace Proto4X.Components
     {
         public int Level { get; private set; } = level;
     }
-    public interface ILvlProvider : IComponentProvider
-    {
-        public Lvl[] Lvls { get; }
-    }
 }

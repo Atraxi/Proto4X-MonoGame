@@ -6,6 +6,6 @@ namespace MonoGameLibrary.Systems
 {
     public interface IUpdateSystem
     {
-        void Update(GameTime gameTime, List<ArchetypeBase> archetypes);
+        void Update(GameTime gameTime, List<ArchetypeChunk> archetypeChunks);
     }
 }

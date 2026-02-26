@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGameLibrary.Archetypes;
+using MonoGameLibrary.Components;
 using MonoGameLibrary.Systems;
-using Proto4x.Components;
+using Proto4X.Components;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +10,7 @@ namespace Proto4X.Systems
 {
     public class MovementSystem : SystemBase, IUpdateSystem
     {
-        public float Friction = 0.005f;
+        public float Friction = 0.001f;
 
         public float MaxSpeed = 500;
         public float MaxThrust = 100;
@@ -17,9 +18,54 @@ namespace Proto4X.Systems
         public float MaxAngularVelocity = (float)Math.PI / 4;
         public float MaxAngularAcceleration = (float)Math.PI / 8;
 
-        public override IEnumerable<Type> RequiredComponentProviders => [
-            typeof(IMotionProvider),
-            typeof(IPositionProvider)];
+        public override ComponentTypeMask RequiredComponentProviders => ComponentTypeMask.FromTypes(
+            typeof(Motion),
+            typeof(Position)
+            );
+
+        public void Update(GameTime gameTime, List<ArchetypeChunk> archetypeChunks)
+        {
+            foreach (var archetypeChunk in archetypeChunks)
+            {
+                var motions = archetypeChunk.Get<Motion>();
+                var positions = archetypeChunk.Get<Position>();
+
+                for (var entityIndex = 0; entityIndex < archetypeChunk.EntityCount; entityIndex++)
+                {
+                    ref var position = ref positions[entityIndex];
+                    ref var location = ref position.Location;
+                    ref var velocity = ref motions[entityIndex].Velocity;
+                    ref var acceleration = ref motions[entityIndex].Acceleration;
+                    ref var angularVelocity = ref motions[entityIndex].AngularVelocity;
+                    ref var angularAcceleration = ref motions[entityIndex].AngularAcceleration;
+
+                    velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (velocity.Length() > MaxSpeed)
+                    {
+                        velocity.Normalize();
+                        velocity *= MaxSpeed;
+                    }
+                    velocity *= 1 - Friction;
+                    location += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    angularVelocity += angularAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (angularVelocity > MaxAngularVelocity)
+                    {
+                        angularVelocity = MaxAngularVelocity;
+                    }
+                    angularVelocity *= 1 - Friction;
+                    position.Rotation += angularVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (position.Rotation > Math.PI * 2)
+                    {
+                        position.Rotation -= (float)(Math.PI * 2);
+                    }
+                    else if (position.Rotation < 0)
+                    {
+                        position.Rotation += (float)(Math.PI * 2);
+                    }
+                }
+            }
+        }
 
         //void AccelerateRelativeToRotation(Vector2 thrust)
         //{
@@ -74,48 +120,5 @@ namespace Proto4X.Systems
         //        Velocity.Y = 0;
         //    }
         //}
-
-        public void Update(GameTime gameTime, List<ArchetypeBase> archetypes)
-        {
-            foreach (ArchetypeBase archetype in archetypes)
-            {
-                var motionProvider = (IMotionProvider)archetype;
-                var positionProvider = (IPositionProvider)archetype;
-
-                for (int i = 0; i < archetype.Count; i++)
-                {
-                    var position = positionProvider.Positions[i];
-                    var velocity = motionProvider.MotionValues[i].Velocity;
-                    var acceleration = motionProvider.MotionValues[i].Acceleration;
-                    var angularVelocity = motionProvider.MotionValues[i].AngularVelocity;
-                    var angularAcceleration = motionProvider.MotionValues[i].AngularAcceleration;
-
-                    velocity += acceleration * gameTime.ElapsedGameTime.Ticks;
-                    if (velocity.Length() > MaxSpeed)
-                    {
-                        velocity.Normalize();
-                        velocity *= MaxSpeed;
-                    }
-                    velocity *= 1 - Friction;
-                    position.Location += velocity * gameTime.ElapsedGameTime.Ticks;
-
-                    angularVelocity += angularAcceleration * gameTime.ElapsedGameTime.Ticks;
-                    if (angularVelocity > MaxAngularVelocity)
-                    {
-                        angularVelocity = MaxAngularVelocity;
-                    }
-                    angularVelocity *= 1 - Friction;
-                    position.Rotation += angularVelocity * gameTime.ElapsedGameTime.Ticks;
-                    if (position.Rotation > Math.PI * 2)
-                    {
-                        position.Rotation -= (float)(Math.PI * 2);
-                    }
-                    else if (position.Rotation < 0)
-                    {
-                        position.Rotation += (float)(Math.PI * 2);
-                    }
-                }
-            }
-        }
     }
 }

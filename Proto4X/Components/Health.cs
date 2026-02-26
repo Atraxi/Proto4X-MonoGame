@@ -7,8 +7,4 @@ namespace Proto4X.Components
         public int Current { get; private set; } = current;
         public int Max { get; private set; } = max;
     }
-    public interface IHealthProvider : IComponentProvider
-    {
-        public Health[] HealthValues { get; }
-    }
 }
