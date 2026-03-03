@@ -1,5 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Input;
+using MonoGameLibrary.Systems;
+using MonoGameLibrary.UI;
+using MonoGameLibrary.World;
 
 namespace MonoGameLibrary
 {
@@ -15,6 +19,12 @@ namespace MonoGameLibrary
         /// </summary>
         protected SpriteBatch? SpriteBatch { get; private set; }
 
+        public GameWorld World { get; private set; }
+
+        protected UserInterfaceManager UserInterfaceManager { get; private set; }
+
+        public SystemScheduler SystemScheduler { get; private set; }
+
         /// <summary>
         /// Creates a new Core instance.
         /// </summary>
@@ -24,34 +34,48 @@ namespace MonoGameLibrary
         /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
         public Core(string title, int width, int height, bool fullScreen)
         {
-            // Create a new graphics device manager.
             Graphics = new GraphicsDeviceManager(this)
             {
-                // Set the graphics defaults.
                 PreferredBackBufferWidth = width,
                 PreferredBackBufferHeight = height,
                 IsFullScreen = fullScreen,
             };
-
-            // Apply the graphic presentation changes.
             Graphics.ApplyChanges();
 
-            // Set the window title.
             Window.Title = title;
-            
-            // Set the root directory for content.
             Content.RootDirectory = "Content";
-
-            // Mouse is visible by default.
             IsMouseVisible = true;
+
+            World = new GameWorld(0, 0, 1000, 1000);
+            UserInterfaceManager = new UserInterfaceManager(World);
+            SystemScheduler = new SystemScheduler();
         }
 
         protected override void Initialize()
         {
-            // Create the sprite batch instance.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             base.Initialize();
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            InputManager.Instance.Update();
+            UserInterfaceManager.Update();
+
+            SystemScheduler.Update(World, gameTime);
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            if (SpriteBatch != null)
+            {
+                SystemScheduler.Draw(SpriteBatch, /*TODO UI viewport*/new Rectangle(0, 0, 1000, 1000), World);
+            }
+
+            base.Draw(gameTime);
         }
     }
 }

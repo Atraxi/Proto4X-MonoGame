@@ -1,5 +1,4 @@
-﻿using MonoGameLibrary.Components;
-using System;
+﻿using MonoGameLibrary.Components.Infrastructure;
 using System.Collections.Generic;
 
 namespace MonoGameLibrary.Archetypes
@@ -22,33 +21,9 @@ namespace MonoGameLibrary.Archetypes
             var componentTypeId = ComponentTypeRegistry.GetId(payload.GetType());
             componentTypeMask = componentTypeMask.With(ComponentTypeMask.FromTypeId(componentTypeId));
 
-            components.Add(new ComponentContainer<T>(payload));
+            components.Add(new ComponentContainerDetached<T>(payload));
 
             return this;
-        }
-
-        internal interface IComponentContainer
-        {
-            void WriteComponent(Archetype archetype, int entityIndex);
-
-            void CreateComponentColumn(Archetype archetype, int columnIndex, int initialCapacity);
-
-        }
-        internal struct ComponentContainer<T>(T payload) : IComponentContainer where T : struct
-        {
-            public readonly T Component => payload;
-
-            public static Type GetComponentType() => typeof(T);
-
-            public readonly void CreateComponentColumn(Archetype archetype, int columnIndex, int initialCapacity)
-            {
-                archetype.CreateComponentColumn<T>(columnIndex, initialCapacity);
-            }
-
-            public readonly void WriteComponent(Archetype archetype, int entityIndex)
-            {
-                archetype.WriteComponent(payload, entityIndex);
-            }
         }
     }
 }

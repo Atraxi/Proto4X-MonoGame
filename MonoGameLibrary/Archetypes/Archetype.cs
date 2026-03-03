@@ -1,14 +1,15 @@
-﻿using MonoGameLibrary.Components;
+﻿using MonoGameLibrary.Components.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MonoGameLibrary.Archetypes
 {
     public class Archetype
     {
-        protected int[] DenseIndexToEntityId;
-        protected Dictionary<int, int> EntityIdToDenseIndex = [];
+        private int[] DenseIndexToEntityId;
+        private readonly Dictionary<int, int> EntityIdToDenseIndex = [];
 
         public readonly ComponentTypeMask ComponentMask;
 
@@ -60,7 +61,7 @@ namespace MonoGameLibrary.Archetypes
 
             foreach (var payload in componentPayloads.Components)
             {
-                payload.WriteComponent(this, entityIndex);
+                payload.WriteComponentByIndex(this, entityIndex);
             }
         }
 
@@ -69,14 +70,25 @@ namespace MonoGameLibrary.Archetypes
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="componentData"></param>
-        internal void WriteComponent<T>(T componentData, int entityIndex) where T : struct
+        internal void WriteComponentById<T>(T componentData, int entityId) where T : struct
         {
+            WriteComponentByIndex(componentData, EntityIdToDenseIndex[entityId]);
+        }
+
+        /// <summary>
+        /// This method exists to allow an entity to provide an arbitrary number of components, while also getting around a generic type erasure boundary eforced by the necessity of said array of components of arbitrary value types
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="componentData"></param>
+        internal void WriteComponentByIndex<T>(T componentData, int entityIndex) where T : struct
+        {
+            Debug.Assert(entityIndex < count);
             var componentTypeId = ComponentTypeRegistry.GetId(componentData.GetType());
             int componentsIndex = componentTypeIdToComponentArrayIndex[componentTypeId];
-            
-            //We are able to assume the capacity will be sufficient due to a check and grow being performed above in AddEntity(...)
-            //I'd like to remove the cast if possible. It should be 100% safe though
-            ((ComponentColumn<T>)componentArrays[componentsIndex]).Values[entityIndex] = componentData;
+
+            //TODO: Would it be better to just cast and crash on a ClassCastException? This should be an impossible situation that would indicate a critical data corruption bug if it happens so a hard crash might be preferable?
+            Debug.Assert(componentArrays[componentsIndex].GetType().IsAssignableTo(typeof(ComponentColumn<T>)));
+            (componentArrays[componentsIndex] as ComponentColumn<T>)?.Values[entityIndex] = componentData;
         }
 
         internal ArchetypeChunk GetMatchingComponents(ComponentTypeMask queriedTypesMask)
@@ -101,6 +113,21 @@ namespace MonoGameLibrary.Archetypes
             {
                 componentData.RemoveAtIndexAndCopyLast(index, last);
             }
+        }
+
+        public bool HasEntity(int entityId) => EntityIdToDenseIndex.ContainsKey(entityId);
+
+        public Dictionary<Type, IComponentContainer> GetComponentsForEntity(int entityId)
+        {
+            Debug.Assert(EntityIdToDenseIndex.ContainsKey(entityId));
+
+            var result = new Dictionary<Type, IComponentContainer>();
+            foreach (var componentData in componentArrays)
+            {
+                var data = componentData.GetComponentContainerForEntity(EntityIdToDenseIndex[entityId], this);
+                result.Add(data.GetComponentType(), data);
+            }
+            return result;
         }
 
         public void QueueEntityForAddition(EntityBuilder entityData)

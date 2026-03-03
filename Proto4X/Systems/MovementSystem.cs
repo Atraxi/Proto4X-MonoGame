@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGameLibrary.Archetypes;
-using MonoGameLibrary.Components;
+using MonoGameLibrary.Components.Infrastructure;
 using MonoGameLibrary.Systems;
 using Proto4X.Components;
 using System;
@@ -10,7 +10,7 @@ namespace Proto4X.Systems
 {
     public class MovementSystem : SystemBase, IUpdateSystem
     {
-        public float Friction = 0.001f;
+        public float Friction = 0.1f;
 
         public float MaxSpeed = 500;
         public float MaxThrust = 100;
@@ -27,17 +27,14 @@ namespace Proto4X.Systems
         {
             foreach (var archetypeChunk in archetypeChunks)
             {
-                var motions = archetypeChunk.Get<Motion>();
-                var positions = archetypeChunk.Get<Position>();
-
                 for (var entityIndex = 0; entityIndex < archetypeChunk.EntityCount; entityIndex++)
                 {
-                    ref var position = ref positions[entityIndex];
+                    ref var position = ref archetypeChunk.Get<Position>(entityIndex);
                     ref var location = ref position.Location;
-                    ref var velocity = ref motions[entityIndex].Velocity;
-                    ref var acceleration = ref motions[entityIndex].Acceleration;
-                    ref var angularVelocity = ref motions[entityIndex].AngularVelocity;
-                    ref var angularAcceleration = ref motions[entityIndex].AngularAcceleration;
+                    ref var velocity = ref archetypeChunk.Get<Motion>(entityIndex).Velocity;
+                    ref var acceleration = ref archetypeChunk.Get<Motion>(entityIndex).Acceleration;
+                    ref var angularVelocity = ref archetypeChunk.Get<Motion>(entityIndex).AngularVelocity;
+                    ref var angularAcceleration = ref archetypeChunk.Get<Motion>(entityIndex).AngularAcceleration;
 
                     velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (velocity.Length() > MaxSpeed)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MonoGameLibrary.Components
+namespace MonoGameLibrary.Components.Infrastructure
 {
     public static class ComponentTypeRegistry
     {

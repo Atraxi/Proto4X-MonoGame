@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
 using MonoGameLibrary.Archetypes;
-using MonoGameLibrary.Components;
+using MonoGameLibrary.Components.Infrastructure;
 using MonoGameLibrary.Systems;
 using Proto4X.Components;
 using System.Collections.Generic;
@@ -20,13 +20,10 @@ namespace Proto4X.Systems
         {
             foreach(var archetypeChunk in archetypeChunks)
             {
-                var drawables = archetypeChunk.Get<Drawable>();
-                var entityPositions = archetypeChunk.Get<Position>();
-
                 for (var entityIndex = 0; entityIndex < archetypeChunk.EntityCount; entityIndex++)
                 {
-                    ref var drawable = ref drawables[entityIndex];
-                    ref var position = ref entityPositions[entityIndex];
+                    ref var drawable = ref archetypeChunk.Get<Drawable>(entityIndex);
+                    ref var position = ref archetypeChunk.Get<Position>(entityIndex);
 
                     if(!viewport.Contains(position.Location))
                     {

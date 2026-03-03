@@ -1,4 +1,4 @@
-﻿namespace MonoGameLibrary.Components
+﻿namespace MonoGameLibrary.Components.Infrastructure
 {
     //Currently this just increments, but it's possible we'll switch to pooled/reused Ids or something hashed or randomised
     internal static class EntityIdRegistry

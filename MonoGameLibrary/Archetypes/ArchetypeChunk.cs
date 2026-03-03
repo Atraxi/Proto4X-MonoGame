@@ -1,4 +1,4 @@
-﻿using MonoGameLibrary.Components;
+﻿using MonoGameLibrary.Components.Infrastructure;
 using System;
 using System.Collections.Generic;
 
@@ -10,9 +10,9 @@ namespace MonoGameLibrary.Archetypes
 
         public readonly long EntityCount = entityCount;
 
-        public T[] Get<T>() where T : struct
+        public ref T Get<T>(int index) where T : struct
         {
-            return ((ComponentColumn<T>) Components[typeof(T)]).Values;
+            return ref ((ComponentColumn<T>)Components[typeof(T)]).Values[index];
         }
     }
 }

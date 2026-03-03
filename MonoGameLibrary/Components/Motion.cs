@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGameLibrary.Components;
-using System;
 
 namespace Proto4X.Components
 {

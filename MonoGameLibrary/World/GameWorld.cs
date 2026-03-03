@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGameLibrary.Archetypes;
-using MonoGameLibrary.Components;
-using MonoGameLibrary.Utils;
+using MonoGameLibrary.Components.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MonoGameLibrary.World
 {
@@ -43,10 +43,26 @@ namespace MonoGameLibrary.World
             }
         }
 
-        /* Suggested by ChatGPT as a structure when comparing pre-made ECS libraries. I think I like it? But I don't know if it's worth converting to it
-          world.GetEntities()
-             .With<Position>()
-             .With<Velocity>()
-        */
+        public void RemoveEntity(int entityId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasEntity(int entityId)
+        {
+            return Archetypes.Any(archetype => archetype.Value.HasEntity(entityId));
+        }
+
+        public Dictionary<Type, IComponentContainer> GetComponentsForEntity(int entityId)
+        {
+            foreach (var archetype in Archetypes)
+            {
+                if(archetype.Value.HasEntity(entityId))
+                {
+                    return archetype.Value.GetComponentsForEntity(entityId);
+                }
+            }
+            throw new InvalidOperationException($"An entity with the id {entityId} doesn't exist");
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using MonoGameLibrary.Components;
+﻿using MonoGameLibrary.Components.Infrastructure;
 
 namespace MonoGameLibrary.Systems
 {

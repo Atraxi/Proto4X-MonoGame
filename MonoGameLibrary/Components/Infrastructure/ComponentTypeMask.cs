@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace MonoGameLibrary.Components
+namespace MonoGameLibrary.Components.Infrastructure
 {
     public readonly struct ComponentTypeMask(ulong bitsA, ulong bitsB)
     {

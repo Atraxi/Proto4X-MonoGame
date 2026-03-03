@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGameLibrary.Archetypes;
-using MonoGameLibrary.Components;
+using MonoGameLibrary.Components.Infrastructure;
 using MonoGameLibrary.Systems;
 using Proto4X.Components;
 using System.Collections.Generic;
@@ -19,11 +19,10 @@ namespace Proto4X.Systems
 
             foreach (var archetypeChunk in archetypeChunks)
             {
-                var timers = archetypeChunk.Get<Timer>();
-
-                for (var entityIndex = 0; entityIndex < timers.Length; entityIndex++)
+                for (var entityIndex = 0; entityIndex < archetypeChunk.EntityCount; entityIndex++)
                 {
-                    ref Timer timer = ref timers[entityIndex];
+                    ref Timer timer = ref archetypeChunk.Get<Timer>(entityIndex);
+
                     if (timer.HasJustElapsed)
                     {
                         timer.HasJustElapsed = false;
