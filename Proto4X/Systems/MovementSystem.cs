@@ -10,13 +10,13 @@ namespace Proto4X.Systems
 {
     public class MovementSystem : SystemBase, IUpdateSystem
     {
-        public float Friction = 0.1f;
+        public const float Friction = 0.01f;
 
-        public float MaxSpeed = 500;
-        public float MaxThrust = 100;
+        public const float MaxSpeed = 5000;
+        public const float MaxThrust = 1000;
 
-        public float MaxAngularVelocity = (float)Math.PI / 4;
-        public float MaxAngularAcceleration = (float)Math.PI / 8;
+        public const float MaxAngularVelocity = (float)Math.PI / 2;
+        public const float MaxAngularAcceleration = (float)Math.PI / 24;
 
         public override ComponentTypeMask RequiredComponentProviders => ComponentTypeMask.FromTypes(
             typeof(Motion),
@@ -46,9 +46,10 @@ namespace Proto4X.Systems
                     location += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                     angularVelocity += angularAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (angularVelocity > MaxAngularVelocity)
+                    if (Math.Abs(angularVelocity) > MaxAngularVelocity)
                     {
-                        angularVelocity = MaxAngularVelocity;
+                        var sign = Math.Sign(angularVelocity);
+                        angularVelocity = sign * MaxAngularVelocity;
                     }
                     angularVelocity *= 1 - Friction;
                     position.Rotation += angularVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;

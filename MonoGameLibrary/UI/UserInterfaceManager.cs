@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary.Components.Infrastructure;
 using MonoGameLibrary.Input;
+using MonoGameLibrary.Utils;
 using MonoGameLibrary.World;
 using Proto4X.Components;
 using System;
@@ -11,18 +12,37 @@ namespace MonoGameLibrary.UI
 {
     public class UserInterfaceManager(GameWorld gameWorld)
     {
-        private const int ACCELERATION = 500;
-        private const int ANGULAR_ACCELERATION = 1000;
+        private const int ACCELERATION = 100;
+        private const int ANGULAR_ACCELERATION = 100;
         private int selectedEntityId = 0;
         private Dictionary<Type, IComponentContainer>? selectedEntityComponents = null;
+        private Rectangle currentViewport = Rectangle.Empty;
 
-        public void Update()
+        public Camera Camera { get; internal set; } = new();
+
+        public void Update(Rectangle viewportBounds, GameTime gameTime)
         {
+            currentViewport = viewportBounds;
             UpdateAcceleration();
+
+            Camera.Update(viewportBounds, gameTime);
+        }
+
+        internal Rectangle GetVisibleScreenBoundsAABB()
+        {
+            var viewportPoints = new Vector2[] {
+                currentViewport.Location.ToVector2(),
+                new(currentViewport.Right, currentViewport.Top),
+                new(currentViewport.Right, currentViewport.Bottom),
+                new(currentViewport.Left, currentViewport.Bottom)
+            }.Transform(Camera.GetCameraTransform());
+
+            return viewportPoints.ToAABB();
         }
 
         private void UpdateAcceleration()
         {
+            //TODO this is a placeholder for quick PoC testing. I'm probably going to want to have other parts of the game be able to register behaviours or something, not sure how I want to handle that yet
             if (selectedEntityId != -1 && gameWorld.HasEntity(selectedEntityId))
             {
                 selectedEntityComponents = gameWorld.GetComponentsForEntity(selectedEntityId);

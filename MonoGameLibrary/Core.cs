@@ -61,7 +61,7 @@ namespace MonoGameLibrary
         protected override void Update(GameTime gameTime)
         {
             InputManager.Instance.Update();
-            UserInterfaceManager.Update();
+            UserInterfaceManager.Update(GraphicsDevice.Viewport.Bounds, gameTime);
 
             SystemScheduler.Update(World, gameTime);
 
@@ -72,7 +72,7 @@ namespace MonoGameLibrary
         {
             if (SpriteBatch != null)
             {
-                SystemScheduler.Draw(SpriteBatch, /*TODO UI viewport*/new Rectangle(0, 0, 1000, 1000), World);
+                SystemScheduler.Draw(SpriteBatch, UserInterfaceManager, World);
             }
 
             base.Draw(gameTime);

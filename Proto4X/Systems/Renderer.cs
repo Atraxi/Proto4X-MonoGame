@@ -16,7 +16,7 @@ namespace Proto4X.Systems
             typeof(Drawable)
             );
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle viewport, List<ArchetypeChunk> archetypeChunks)
+        public void Draw(SpriteBatch spriteBatch, Rectangle cullingBounds, List<ArchetypeChunk> archetypeChunks)
         {
             foreach(var archetypeChunk in archetypeChunks)
             {
@@ -25,12 +25,12 @@ namespace Proto4X.Systems
                     ref var drawable = ref archetypeChunk.Get<Drawable>(entityIndex);
                     ref var position = ref archetypeChunk.Get<Position>(entityIndex);
 
-                    if(!viewport.Contains(position.Location))
-                    {
-                        continue;
-                    }
-
-                    spriteBatch.Draw(SpriteLibrary.GetTexture(drawable.SpriteId), position.Location, drawable.TextureRegion, Color.White, position.Rotation, Vector2.Zero, 1, SpriteEffects.None, 1);
+                    //if(!cullingBounds.Contains(position.Location))
+                    //{
+                    //    continue;
+                    //}
+                    var sprite = SpriteLibrary.GetTexture(drawable.SpriteId);
+                    spriteBatch.Draw(sprite, position.Location, drawable.TextureRegion, Color.White, position.Rotation, new Vector2(sprite.Width / 2, sprite.Height / 2), 1, SpriteEffects.None, 1);
                 }
             }
         }

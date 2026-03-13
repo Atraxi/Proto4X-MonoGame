@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.UI;
 using MonoGameLibrary.Utils;
 using MonoGameLibrary.World;
 using System.Collections.Generic;
@@ -45,18 +46,20 @@ namespace MonoGameLibrary.Systems
             
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle viewport, GameWorld gameLayer)
+        public void Draw(SpriteBatch spriteBatch, UserInterfaceManager userInterfaceManager, GameWorld gameLayer)
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(transformMatrix: userInterfaceManager.Camera.GetCameraTransform());
+            //TODO if I ever swap to some sort of skewed/orthographic perspective then I may not be able to keep AABB, in the worst case that could become a massive region
+            var cullingBounds = userInterfaceManager.GetVisibleScreenBoundsAABB();
             foreach (var system in _drawSystems[gameLayer])
             {
-                var systemAsBase = (SystemBase)system;//Guaranteed because we use add<T>(...) where T : SystemBase, would use a union type if they were available
+                var systemAsBase = (SystemBase)system;//Guaranteed cast because we use add<T>(...) where T : SystemBase, would use a union type if they were available
                 
                 //TODO maybe we can cache these? type lookups every frame/update are not cheap but not brutal
                 var archetypeChunks = gameLayer.QueryRelevantComponentArrays(systemAsBase.RequiredComponentProviders);
                 if (archetypeChunks.Count > 0)
                 {
-                    system.Draw(spriteBatch, viewport, archetypeChunks);
+                    system.Draw(spriteBatch, cullingBounds, archetypeChunks);
                 }
             }
             spriteBatch.End();
