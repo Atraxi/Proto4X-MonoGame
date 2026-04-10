@@ -16,6 +16,7 @@ namespace MonoGameLibrary.UI
 
         internal void Update(Rectangle viewportBounds, GameTime gameTime)
         {
+            //TODO maybe this should be moved into UIManager to consolidate input detection? Or maybe instead I should implement stub APIs to isolate key codes for later rebinding support?
             var keyboard = InputManager.Instance.KeyboardInfo;
             var mouse = InputManager.Instance.MouseInfo;
 

@@ -1,16 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGameLibrary.Archetypes;
+using MonoGameLibrary.Components;
 using MonoGameLibrary.Components.Infrastructure;
 using MonoGameLibrary.Input;
 using MonoGameLibrary.Utils;
 using MonoGameLibrary.World;
-using Proto4X.Components;
 using System;
 using System.Collections.Generic;
 
 namespace MonoGameLibrary.UI
 {
-    public class UserInterfaceManager(GameWorld gameWorld)
+    public class UserInterfaceManager(GameWorld gameWorld)//TODO partial pt2 in Proto4X??
     {
         private const int ACCELERATION = 100;
         private const int ANGULAR_ACCELERATION = 100;
@@ -22,8 +23,10 @@ namespace MonoGameLibrary.UI
 
         public void Update(Rectangle viewportBounds, GameTime gameTime)
         {
+            InputManager.Instance.Update();
             currentViewport = viewportBounds;
-            UpdateAcceleration();
+            UpdatePlayerAcceleration();
+            UpdateUserSelection();
 
             Camera.Update(viewportBounds, gameTime);
         }
@@ -40,7 +43,18 @@ namespace MonoGameLibrary.UI
             return viewportPoints.ToAABB();
         }
 
-        private void UpdateAcceleration()
+        void UpdateUserSelection()
+        {
+            var mouse = InputManager.Instance.MouseInfo;
+            if (mouse.WasButtonJustPressed(MouseButton.Right))
+            {
+                Core.Instance?.World.AddEntity(EntityBuilder.CreateEntity()
+                    .With(new Position(mouse.Position.ToVector2().Transform(Matrix.Invert(Camera.GetCameraTransform()))))
+                    .With(new Drawable(1, null)));
+            }
+        }
+
+        private void UpdatePlayerAcceleration()
         {
             //TODO this is a placeholder for quick PoC testing. I'm probably going to want to have other parts of the game be able to register behaviours or something, not sure how I want to handle that yet
             if (selectedEntityId != -1 && gameWorld.HasEntity(selectedEntityId))

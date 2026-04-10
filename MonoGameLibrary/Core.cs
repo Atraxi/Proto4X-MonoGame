@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGameLibrary.Input;
 using MonoGameLibrary.Systems;
 using MonoGameLibrary.UI;
 using MonoGameLibrary.World;
@@ -23,6 +22,8 @@ namespace MonoGameLibrary
 
         protected UserInterfaceManager UserInterfaceManager { get; private set; }
 
+        public static Core? Instance { get; private set; }
+
         public SystemScheduler SystemScheduler { get; private set; }
 
         /// <summary>
@@ -34,6 +35,7 @@ namespace MonoGameLibrary
         /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
         public Core(string title, int width, int height, bool fullScreen)
         {
+            Instance = this;
             Graphics = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = width,
@@ -60,7 +62,6 @@ namespace MonoGameLibrary
 
         protected override void Update(GameTime gameTime)
         {
-            InputManager.Instance.Update();
             UserInterfaceManager.Update(GraphicsDevice.Viewport.Bounds, gameTime);
 
             SystemScheduler.Update(World, gameTime);

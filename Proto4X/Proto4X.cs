@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Archetypes;
+using MonoGameLibrary.Components;
 using MonoGameLibrary.Input;
 using MonoGameLibrary.Systems;
 using Proto4X.Components;
@@ -18,6 +19,7 @@ namespace Proto4X
             SystemScheduler.Add(World, new Renderer());
             SystemScheduler.Add(World, new TimerSystem());
             SystemScheduler.Add(World, new MovementSystem());
+            SystemScheduler.Add(World, new CollisionDetectionSystem());
 
             base.Initialize();
         }
@@ -26,6 +28,8 @@ namespace Proto4X
         {
             var scout = Content.Load<Texture2D>("Ships/ship_scout_32x32");
             var scoutId = SpriteLibrary.Add(scout);
+            var station = Content.Load<Texture2D>("Stations/station_core_64x64");
+            var stationId = SpriteLibrary.Add(station);
 
             World.AddEntity(EntityBuilder.CreateEntity()
                 .With(new Position(new Vector2(50, 60), float.DegreesToRadians(90)))

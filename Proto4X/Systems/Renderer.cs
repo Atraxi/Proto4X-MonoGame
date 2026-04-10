@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
 using MonoGameLibrary.Archetypes;
+using MonoGameLibrary.Components;
 using MonoGameLibrary.Components.Infrastructure;
 using MonoGameLibrary.Systems;
-using Proto4X.Components;
 using System.Collections.Generic;
 
 namespace Proto4X.Systems
